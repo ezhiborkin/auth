@@ -103,7 +103,7 @@ func (r *UserRepository) Find(id int) (*users.User, error) {
 
 // Update user
 func (r *UserRepository) Update(id int, u *users.User) error {
-	if err := u.Validate(); err != nil {
+	if err := u.ValidateInvalid(); err != nil {
 		return err
 	}
 	uOld, err := r.store.User().Find(id)
@@ -115,18 +115,13 @@ func (r *UserRepository) Update(id int, u *users.User) error {
 		return store.ErrRecordNotFound
 	}
 
-	if err := u.EncryptPassword(); err != nil {
-		return err
-	}
-
 	r.store.db.QueryRow(
 		`
 		UPDATE users 
-		SET email = $1, encrypted_password = $2, role_id = $3 
-		WHERE id = $4
+		SET email = $1, role_id = $2 
+		WHERE id = $3
 		`,
 		u.Email,
-		u.EncryptedPassword,
 		u.RoleId,
 		id,
 	)

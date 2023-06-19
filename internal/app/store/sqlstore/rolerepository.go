@@ -1,7 +1,9 @@
 package sqlstore
 
 import (
+	"database/sql"
 	model "http-rest-api/internal/app/model/roles"
+	"http-rest-api/internal/app/store"
 )
 
 type RoleRepository struct {
@@ -56,4 +58,19 @@ func (rep *RoleRepository) GetAll() (*[]model.Role, error) {
 	}
 
 	return &rolesArray, err
+}
+
+func (rep *RoleRepository) Remove(id int) error {
+	if err := rep.store.db.QueryRow(
+		"DELETE FROM roles WHERE id = $1",
+		id,
+	).Err(); err != nil {
+		if err == sql.ErrNoRows {
+			return store.ErrRecordNotFound
+		}
+
+		return err
+	}
+
+	return nil
 }

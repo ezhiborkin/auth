@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
 
 	"http-rest-api/internal/app/apiserver"
 
@@ -19,6 +21,7 @@ func init() {
 
 func main() {
 	flag.Parse()
+	fmt.Println(os.Getenv("SECRET_KEY"))
 
 	config := apiserver.NewConfig()
 	_, err := toml.DecodeFile(configPath, config)

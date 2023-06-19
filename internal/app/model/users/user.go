@@ -15,12 +15,28 @@ type User struct {
 	RoleId            int    `json:"role_id"`
 }
 
+type UserT struct {
+	Id                int    `json:"id"`
+	Email             string `json:"email"`
+	Password          string `json:"password,omitempty"`
+	EncryptedPassword string `json:"-"`
+	RoleTitle         string `json:"role_title"`
+}
+
 // Validate ...
 func (u *User) Validate() error {
 	return validation.ValidateStruct(
 		u,
 		validation.Field(&u.Email, validation.Required, is.Email),
 		validation.Field(&u.Password, validation.By(requiredIf(u.EncryptedPassword == "")), validation.Length(6, 100)),
+		validation.Field(&u.RoleId, validation.Required),
+	)
+}
+
+func (u *User) ValidateInvalid() error {
+	return validation.ValidateStruct(
+		u,
+		validation.Field(&u.Email, validation.Required, is.Email),
 		validation.Field(&u.RoleId, validation.Required),
 	)
 }

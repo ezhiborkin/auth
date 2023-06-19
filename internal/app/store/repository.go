@@ -20,6 +20,7 @@ type RoleRepository interface {
 	Create(*roles.Role) error
 	Find(int) (*roles.Role, error)
 	GetAll() (*[]roles.Role, error)
+	Remove(int) error
 }
 
 type FileRepository interface {

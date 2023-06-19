@@ -34,3 +34,7 @@ func (r *RoleRepository) Find(id int) (*roles.Role, error) {
 func (r *RoleRepository) GetAll() (*[]roles.Role, error) {
 	return nil, nil
 }
+
+func (r *RoleRepository) Remove(id int) error {
+	return nil
+}
